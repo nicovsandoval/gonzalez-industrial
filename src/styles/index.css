@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/*
+ * ── Dark mode: class-based ────────────────────────
+ * Tailwind v4 usa media query por defecto.
+ * Esta línea lo cambia a class-based (.dark en <html>).
+ * Sin esto, dark: utilities se activan por prefers-color-scheme
+ * del sistema y no respetan el toggle manual.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Theme tokens ──────────────────────────────── */
+@theme {
+  --color-primary: #15401A;
+  --color-primary-light: #61A75E;
+  --color-dark: #1A1A1A;
+
+  --font-oswald: "Oswald", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Base styles ───────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: #1A1A1A;
+    background-color: #ffffff;
+  }
+
+  .dark body {
+    color: #e5e5e5;
+    background-color: #1A1A1A;
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    outline: 2px solid #61A75E;
+    outline-offset: 2px;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: #61A75E;
+    color: white;
+  }
+}
+
+/* ── Utility classes ───────────────────────────── */
+@layer utilities {
+  .font-oswald {
+    font-family: var(--font-oswald);
+  }
+
+  /* Hide scrollbar but keep scroll functionality (carousel) */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

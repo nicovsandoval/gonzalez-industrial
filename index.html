@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Prevent dark mode flash -->
+    <script>
+      (function () {
+        var stored = localStorage.getItem("theme");
+        if (
+          stored === "dark" ||
+          (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <!-- SEO -->
+    <title>Gonzalez Industrial — Maquila y Soluciones Industriales a Medida</title>
+    <meta
+      name="description"
+      content="Fabricación, mantenimiento y procesos metalmecánicos con calidad y cumplimiento. Cotiza con Gonzalez Industrial."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://gonzalezindustrial.com" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Gonzalez Industrial — Maquila y Soluciones Industriales" />
+    <meta
+      property="og:description"
+      content="Fabricación, mantenimiento y procesos metalmecánicos con calidad y cumplimiento."
+    />
+    <meta property="og:image" content="/media/og-image.jpg" />
+    <meta property="og:url" content="https://gonzalezindustrial.com" />
+    <meta property="og:locale" content="es_CO" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
