@@ -1,15 +1,14 @@
 import { navLinks, contact, footer } from "../../data/siteData";
+import { Logo } from "../ui/Logo";
 
 export function Footer() {
   return (
-    <footer className="bg-[#1A1A1A] text-neutral-400">
+    <footer className="bg-[#1A1A1A] text-neutral-400 border-t border-transparent dark:border-neutral-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <span className="font-oswald text-2xl font-bold text-white uppercase tracking-wide">
-              Gonzalez<span className="text-[#61A75E]"> Industrial</span>
-            </span>
+            <Logo context="footer" isDark={true} className="h-10 w-auto" />
             <p className="mt-4 text-sm leading-relaxed">
               Maquila y soluciones industriales a medida. Fabricación,
               mantenimiento y procesos metalmecánicos con calidad y

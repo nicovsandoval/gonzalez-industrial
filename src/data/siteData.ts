@@ -54,6 +54,9 @@ export const hero = {
   title: "Maquila y soluciones industriales a medida",
   subtitle:
     "Fabricación, mantenimiento y procesos metalmecánicos con calidad y cumplimiento.",
+  /** Versión corta del subtítulo para viewports de poca altura */
+  subtitleCompact:
+    "Fabricación y procesos metalmecánicos con calidad y cumplimiento.",
   ctaPrimary: "Cotizar ahora",
   ctaSecondary: "Ver servicios",
   chips: ["Respuesta rápida", "Calidad garantizada", "Entrega a tiempo"],

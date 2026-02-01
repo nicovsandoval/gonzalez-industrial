@@ -36,8 +36,8 @@ const variantClasses: Record<Variant, string> = {
     "focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1A1A1A]",
   ].join(" "),
   secondary: [
-    "bg-[#61A75E] text-white",
-    "hover:bg-white hover:text-[#15401A]",
+    "bg-[#61A75E] text-white shadow-lg",
+    "hover:bg-white hover:text-[#15401A] hover:shadow-xl",
     "active:bg-neutral-100 active:text-[#15401A]",
     // ring-offset-transparent: secondary lives on colored backgrounds (banner, hero)
     "focus-visible:ring-white focus-visible:ring-offset-transparent",
@@ -85,7 +85,7 @@ export function Button(props: ButtonProps) {
 
   const classes = [
     "inline-flex items-center justify-center gap-2 font-semibold rounded-lg",
-    "transition-colors duration-200",
+    "transition-all duration-200",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     "disabled:opacity-50 disabled:cursor-not-allowed",
     variantClasses[variant],

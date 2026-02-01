@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { Hero } from "./components/sections/Hero";
@@ -13,6 +14,7 @@ import { useTheme } from "./hooks/useTheme";
 
 export default function App() {
   const { isDark, toggleTheme } = useTheme();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
@@ -23,7 +25,11 @@ export default function App() {
         Ir al contenido principal
       </a>
 
-      <Header isDark={isDark} onToggleTheme={toggleTheme} />
+      <Header
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
+        onMobileMenuChange={setMobileMenuOpen}
+      />
 
       <main>
         <Hero />
@@ -37,7 +43,7 @@ export default function App() {
       </main>
 
       <Footer />
-      <WhatsAppFloat />
+      {!mobileMenuOpen && <WhatsAppFloat />}
     </>
   );
 }
