@@ -94,7 +94,7 @@ export function Footer() {
         <div className="mt-10 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs">{footer.copyright}</p>
           <a
-            href="/politica-de-privacidad"
+            href="/politica-de-privacidad/"
             className="text-xs hover:text-[#61A75E] transition-colors"
           >
             Política de privacidad

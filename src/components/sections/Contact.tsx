@@ -318,7 +318,7 @@ export function Contact() {
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500 text-center">
                   Al enviar este formulario, acepta nuestra{" "}
                   <a
-                    href="/politica-de-privacidad"
+                    href="/politica-de-privacidad/"
                     className="text-[#61A75E] hover:underline"
                   >
                     Política de Privacidad

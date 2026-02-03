@@ -114,16 +114,27 @@ export const services: Service[] = [
 
 // ─── Productos / Capacidades ───────────────────────────────
 export interface Product {
-  image: string;
+  /** AVIF image (primary, modern browsers) */
+  imageAvif: string;
+  /** WebP image (fallback) */
+  imageWebp: string;
+  /** Alt text for the product image */
+  alt: string;
   title: string;
   category: string;
   badge?: string;
   whatsappMessage: string;
 }
 
+/**
+ * Productos del taller — edita imageAvif/imageWebp/alt para actualizar las fotos.
+ * Los archivos deben existir en /public/media/products/
+ */
 export const products: Product[] = [
   {
-    image: "/media/products/piezas-mecanizadas.avif",
+    imageAvif: "/media/products/piezas-mecanizadas.avif",
+    imageWebp: "/media/products/piezas-mecanizadas.webp",
+    alt: "Piezas mecanizadas a medida",
     title: "Piezas Mecanizadas",
     category: "Mecanizado",
     badge: "Personalizable",
@@ -131,7 +142,9 @@ export const products: Product[] = [
       "Hola, quiero cotizar piezas mecanizadas: ejes, bujes, tornillos especiales, casquillos y componentes a medida.",
   },
   {
-    image: "/media/products/estructuras-metalicas.avif",
+    imageAvif: "/media/products/estructuras-metalicas.avif",
+    imageWebp: "/media/products/estructuras-metalicas.webp",
+    alt: "Piñones y coronas industriales",
     title: "Piñones y Coronas",
     category: "Transmisión",
     badge: "Personalizable",
@@ -139,7 +152,9 @@ export const products: Product[] = [
       "Hola, necesito cotización para fabricación o reparación de piñones, coronas y engranajes industriales.",
   },
   {
-    image: "/media/products/componentes-industriales.avif",
+    imageAvif: "/media/products/componentes-industriales.avif",
+    imageWebp: "/media/products/componentes-industriales.webp",
+    alt: "Poleas industriales para transmisión",
     title: "Poleas Industriales",
     category: "Transmisión",
     badge: "Personalizable",
@@ -147,7 +162,9 @@ export const products: Product[] = [
       "Hola, quiero cotizar poleas para transmisión y maquinaria industrial.",
   },
   {
-    image: "/media/products/ejes-y-bujes.avif",
+    imageAvif: "/media/products/ejes-y-bujes.avif",
+    imageWebp: "/media/products/ejes-y-bujes.webp",
+    alt: "Cadenas industriales",
     title: "Cadenas Industriales",
     category: "Transmisión",
     badge: "Personalizable",
@@ -155,7 +172,9 @@ export const products: Product[] = [
       "Hola, necesito cotización para fabricación, reparación o ensamble de cadenas industriales.",
   },
   {
-    image: "/media/products/soportes-bases.avif",
+    imageAvif: "/media/products/soportes-bases.avif",
+    imageWebp: "/media/products/soportes-bases.webp",
+    alt: "Componentes especiales fabricados a medida",
     title: "Componentes Especiales",
     category: "Fabricación a medida",
     badge: "Personalizable",
@@ -163,7 +182,9 @@ export const products: Product[] = [
       "Hola, quiero cotizar piezas únicas fabricadas según muestra o requerimiento específico.",
   },
   {
-    image: "/media/products/prototipos.avif",
+    imageAvif: "/media/products/prototipos.avif",
+    imageWebp: "/media/products/prototipos.webp",
+    alt: "Prototipos y piezas a medida",
     title: "Prototipos y Piezas a Medida",
     category: "Desarrollo",
     badge: "A medida",
@@ -219,53 +240,62 @@ export const processSteps: ProcessStep[] = [
 ];
 
 // ─── Galería ───────────────────────────────────────────────
+/**
+ * Cada item de la galería. Para editar:
+ *  - Renombra los archivos y actualiza srcAvif/srcWebp (o srcMp4/posterAvif/posterWebp).
+ *  - Cambia alt y caption cuando el dueño confirme qué muestra cada foto.
+ *  - aspect controla la proporción en el mosaico masonry: "square" | "tall" | "wide".
+ *
+ * Los primeros 8 items se muestran en el preview. El 9.° tile muestra "+N".
+ */
 export interface GalleryItem {
+  id: string;
   type: "image" | "video";
-  src: string;
-  poster?: string;
+  /** AVIF source (images) */
+  srcAvif?: string;
+  /** WebP source (images, fallback) */
+  srcWebp?: string;
+  /** MP4 source (videos) */
+  srcMp4?: string;
+  /** Video poster AVIF */
+  posterAvif?: string;
+  /** Video poster WebP (fallback) */
+  posterWebp?: string;
   alt: string;
-  /** Aspect: "square" | "tall" | "wide" para masonry */
-  aspect?: "square" | "tall" | "wide";
+  /** Caption shown only in lightbox */
+  caption: string;
+  /** Aspect for masonry: "square" | "tall" | "wide" */
+  aspect: "square" | "tall" | "wide";
 }
 
+/** Cuántos items se muestran en el preview del mosaico (sin contar el tile "+N") */
+export const GALLERY_FEATURED_COUNT = 8;
+
 export const galleryItems: GalleryItem[] = [
-  {
-    type: "image",
-    src: "/media/gallery/taller-01.jpg",
-    alt: "Vista general del taller",
-    aspect: "wide",
-  },
-  {
-    type: "image",
-    src: "/media/gallery/torno-cnc.jpg",
-    alt: "Torno CNC en operación",
-    aspect: "tall",
-  },
-  {
-    type: "image",
-    src: "/media/gallery/soldadura.jpg",
-    alt: "Proceso de soldadura",
-    aspect: "square",
-  },
-  {
-    type: "video",
-    src: "/media/gallery/proceso-corte.mp4",
-    poster: "/media/gallery/proceso-corte-poster.jpg",
-    alt: "Proceso de corte por plasma",
-    aspect: "wide",
-  },
-  {
-    type: "image",
-    src: "/media/gallery/piezas-terminadas.jpg",
-    alt: "Piezas terminadas",
-    aspect: "square",
-  },
-  {
-    type: "image",
-    src: "/media/gallery/equipo-trabajo.jpg",
-    alt: "Equipo de trabajo",
-    aspect: "tall",
-  },
+  // ── Primeros 8: visibles en el mosaico / carrusel ──────
+  { id: "img-1",   type: "image", srcAvif: "/media/gallery/1.avif",  srcWebp: "/media/gallery/1.webp",  alt: "Foto 1",  caption: "Foto 1",  aspect: "wide" },
+  { id: "img-3",   type: "image", srcAvif: "/media/gallery/3.avif",  srcWebp: "/media/gallery/3.webp",  alt: "Foto 3",  caption: "Foto 3",  aspect: "tall" },
+  { id: "img-4",   type: "image", srcAvif: "/media/gallery/4.avif",  srcWebp: "/media/gallery/4.webp",  alt: "Foto 4",  caption: "Foto 4",  aspect: "square" },
+  { id: "video-1", type: "video", srcMp4: "/media/gallery/1.mp4",   posterAvif: "/media/gallery/5.avif", posterWebp: "/media/gallery/5.webp", alt: "Video del taller 1", caption: "Video 1", aspect: "wide" },
+  { id: "img-6",   type: "image", srcAvif: "/media/gallery/6.avif",  srcWebp: "/media/gallery/6.webp",  alt: "Foto 6",  caption: "Foto 6",  aspect: "tall" },
+  { id: "img-7",   type: "image", srcAvif: "/media/gallery/7.avif",  srcWebp: "/media/gallery/7.webp",  alt: "Foto 7",  caption: "Foto 7",  aspect: "square" },
+  { id: "img-8",   type: "image", srcAvif: "/media/gallery/8.avif",  srcWebp: "/media/gallery/8.webp",  alt: "Foto 8",  caption: "Foto 8",  aspect: "wide" },
+  { id: "video-2", type: "video", srcMp4: "/media/gallery/2.mp4",   posterAvif: "/media/gallery/9.avif", posterWebp: "/media/gallery/9.webp", alt: "Video del taller 2", caption: "Video 2", aspect: "square" },
+
+  // ── Resto: visibles solo en el lightbox (a partir del tile "+N") ──
+  { id: "img-2",   type: "image", srcAvif: "/media/gallery/2.avif",  srcWebp: "/media/gallery/2.webp",  alt: "Foto 2",  caption: "Foto 2",  aspect: "square" },
+  { id: "img-5",   type: "image", srcAvif: "/media/gallery/5.avif",  srcWebp: "/media/gallery/5.webp",  alt: "Foto 5",  caption: "Foto 5",  aspect: "wide" },
+  { id: "img-9",   type: "image", srcAvif: "/media/gallery/9.avif",  srcWebp: "/media/gallery/9.webp",  alt: "Foto 9",  caption: "Foto 9",  aspect: "tall" },
+  { id: "img-10",  type: "image", srcAvif: "/media/gallery/10.avif", srcWebp: "/media/gallery/10.webp", alt: "Foto 10", caption: "Foto 10", aspect: "square" },
+  { id: "img-11",  type: "image", srcAvif: "/media/gallery/11.avif", srcWebp: "/media/gallery/11.webp", alt: "Foto 11", caption: "Foto 11", aspect: "wide" },
+  { id: "img-12",  type: "image", srcAvif: "/media/gallery/12.avif", srcWebp: "/media/gallery/12.webp", alt: "Foto 12", caption: "Foto 12", aspect: "square" },
+  { id: "img-13",  type: "image", srcAvif: "/media/gallery/13.avif", srcWebp: "/media/gallery/13.webp", alt: "Foto 13", caption: "Foto 13", aspect: "tall" },
+  { id: "img-14",  type: "image", srcAvif: "/media/gallery/14.avif", srcWebp: "/media/gallery/14.webp", alt: "Foto 14", caption: "Foto 14", aspect: "square" },
+  { id: "img-15",  type: "image", srcAvif: "/media/gallery/15.avif", srcWebp: "/media/gallery/15.webp", alt: "Foto 15", caption: "Foto 15", aspect: "wide" },
+  { id: "img-16",  type: "image", srcAvif: "/media/gallery/16.avif", srcWebp: "/media/gallery/16.webp", alt: "Foto 16", caption: "Foto 16", aspect: "square" },
+  { id: "img-17",  type: "image", srcAvif: "/media/gallery/17.avif", srcWebp: "/media/gallery/17.webp", alt: "Foto 17", caption: "Foto 17", aspect: "tall" },
+  { id: "img-18",  type: "image", srcAvif: "/media/gallery/18.avif", srcWebp: "/media/gallery/18.webp", alt: "Foto 18", caption: "Foto 18", aspect: "square" },
+  { id: "img-19",  type: "image", srcAvif: "/media/gallery/19.avif", srcWebp: "/media/gallery/19.webp", alt: "Foto 19", caption: "Foto 19", aspect: "wide" },
 ];
 
 // ─── Nosotros ──────────────────────────────────────────────

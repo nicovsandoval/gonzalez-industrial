@@ -1,10 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Play, ChevronLeft, ChevronRight } from "lucide-react";
-import { galleryItems } from "../../data/siteData";
+import { Play, ChevronLeft, ChevronRight, Images } from "lucide-react";
+import { galleryItems, GALLERY_FEATURED_COUNT } from "../../data/siteData";
 import type { GalleryItem } from "../../data/siteData";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Lightbox } from "../ui/Lightbox";
+import { Watermark } from "../ui/Watermark";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+
+/** Items shown in the preview (masonry / carousel). The rest live in the lightbox. */
+const featured = galleryItems.slice(0, GALLERY_FEATURED_COUNT);
+const remaining = galleryItems.length - GALLERY_FEATURED_COUNT;
 
 export function Gallery() {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
@@ -15,6 +20,7 @@ export function Gallery() {
     setLightboxIndex((i) => (i - 1 + galleryItems.length) % galleryItems.length);
   const nextItem = () =>
     setLightboxIndex((i) => (i + 1) % galleryItems.length);
+  const goToItem = (index: number) => setLightboxIndex(index);
 
   return (
     <section id="galeria" className="py-20 md:py-28 bg-white dark:bg-[#1A1A1A]">
@@ -24,18 +30,32 @@ export function Gallery() {
           subtitle="Nuestro trabajo habla por nosotros. Vea nuestras instalaciones y procesos."
         />
 
-        {/* Mobile: Horizontal carousel */}
-        <MobileCarousel items={galleryItems} onItemClick={openLightbox} />
+        {/* Mobile: Horizontal carousel (featured) + "Ver más" */}
+        <MobileCarousel
+          items={featured}
+          totalCount={galleryItems.length}
+          onItemClick={openLightbox}
+          onShowAll={() => openLightbox(0)}
+        />
 
-        {/* Desktop/Tablet: Masonry grid */}
+        {/* Desktop/Tablet: Masonry grid (featured + "+N" tile) */}
         <div className="hidden md:block columns-2 lg:columns-3 gap-4 space-y-4">
-          {galleryItems.map((item, index) => (
+          {featured.map((item, index) => (
             <DesktopCard
-              key={index}
+              key={item.id}
               item={item}
               onClick={() => openLightbox(index)}
             />
           ))}
+
+          {/* "+N" tile — shows the next image with an overlay count */}
+          {remaining > 0 && (
+            <PlusNTile
+              item={galleryItems[GALLERY_FEATURED_COUNT]}
+              remaining={remaining}
+              onClick={() => openLightbox(GALLERY_FEATURED_COUNT)}
+            />
+          )}
         </div>
       </div>
 
@@ -46,8 +66,63 @@ export function Gallery() {
         onClose={closeLightbox}
         onPrev={prevItem}
         onNext={nextItem}
+        onGoTo={goToItem}
       />
     </section>
+  );
+}
+
+/* ── "+N" Tile (desktop masonry) ──────────────────── */
+
+function PlusNTile({
+  item,
+  remaining,
+  onClick,
+}: {
+  item: GalleryItem;
+  remaining: number;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="relative w-full aspect-square rounded-xl overflow-hidden cursor-pointer break-inside-avoid bg-neutral-200 dark:bg-neutral-800 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#61A75E] focus-visible:ring-offset-2"
+      aria-label={`Ver ${remaining} fotos más`}
+    >
+      {item.type === "image" ? (
+        <picture>
+          {item.srcAvif && <source srcSet={item.srcAvif} type="image/avif" />}
+          <img
+            src={item.srcWebp}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </picture>
+      ) : (
+        item.posterWebp && (
+          <picture>
+            {item.posterAvif && <source srcSet={item.posterAvif} type="image/avif" />}
+            <img
+              src={item.posterWebp}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover"
+            />
+          </picture>
+        )
+      )}
+      {/* Dark overlay with count */}
+      <div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-colors flex flex-col items-center justify-center gap-2">
+        <Images size={32} className="text-white/80" />
+        <span className="text-white text-2xl md:text-3xl font-oswald font-bold">
+          +{remaining}
+        </span>
+        <span className="text-white/70 text-sm">Ver más</span>
+      </div>
+    </button>
   );
 }
 
@@ -55,14 +130,19 @@ export function Gallery() {
 
 function MobileCarousel({
   items,
+  totalCount,
   onItemClick,
+  onShowAll,
 }: {
   items: GalleryItem[];
+  totalCount: number;
   onItemClick: (index: number) => void;
+  onShowAll: () => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const reducedMotion = useReducedMotion();
+  const remaining = totalCount - items.length;
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -70,7 +150,6 @@ function MobileCarousel({
     const children = Array.from(el.children) as HTMLElement[];
     if (children.length === 0) return;
 
-    // Find the child closest to the scroll center
     const scrollCenter = el.scrollLeft + el.clientWidth / 2;
     let closest = 0;
     let minDist = Infinity;
@@ -102,7 +181,10 @@ function MobileCarousel({
   );
 
   const goPrev = () => scrollTo(Math.max(0, activeIndex - 1));
-  const goNext = () => scrollTo(Math.min(items.length - 1, activeIndex + 1));
+  const goNext = () => scrollTo(Math.min(items.length, activeIndex + 1));
+
+  /* Total scrollable items: featured items + optional "+N" card */
+  const dotCount = items.length + (remaining > 0 ? 1 : 0);
 
   return (
     <div className="md:hidden">
@@ -115,15 +197,45 @@ function MobileCarousel({
         >
           {items.map((item, index) => (
             <CarouselItem
-              key={index}
+              key={item.id}
               item={item}
               onClick={() => onItemClick(index)}
             />
           ))}
+
+          {/* "+N" card at the end */}
+          {remaining > 0 && (
+            <button
+              onClick={onShowAll}
+              className="snap-center shrink-0 w-[80vw] aspect-[4/3] rounded-xl overflow-hidden relative bg-neutral-200 dark:bg-neutral-800 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#61A75E] focus-visible:ring-offset-2"
+              aria-label={`Ver ${remaining} fotos más`}
+            >
+              {/* Use next item's image as background */}
+              {galleryItems[GALLERY_FEATURED_COUNT]?.type === "image" ? (
+                <picture>
+                  {galleryItems[GALLERY_FEATURED_COUNT].srcAvif && (
+                    <source srcSet={galleryItems[GALLERY_FEATURED_COUNT].srcAvif} type="image/avif" />
+                  )}
+                  <img
+                    src={galleryItems[GALLERY_FEATURED_COUNT].srcWebp}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                </picture>
+              ) : null}
+              <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2">
+                <Images size={28} className="text-white/80" />
+                <span className="text-white text-2xl font-oswald font-bold">+{remaining}</span>
+                <span className="text-white/70 text-sm">Ver galería completa</span>
+              </div>
+            </button>
+          )}
         </div>
 
         {/* Prev / Next buttons */}
-        {items.length > 1 && (
+        {dotCount > 1 && (
           <>
             <button
               onClick={goPrev}
@@ -144,13 +256,13 @@ function MobileCarousel({
       </div>
 
       {/* Dots indicator */}
-      {items.length > 1 && (
+      {dotCount > 1 && (
         <div
           className="flex justify-center gap-2 mt-4"
           role="tablist"
           aria-label="Indicadores de galería"
         >
-          {items.map((_, i) => (
+          {Array.from({ length: dotCount }).map((_, i) => (
             <button
               key={i}
               role="tab"
@@ -181,10 +293,8 @@ function CarouselItem({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const itemRef = useRef<HTMLButtonElement>(null);
-  const [imgError, setImgError] = useState(false);
   const reducedMotion = useReducedMotion();
 
-  // Auto-play video when visible in carousel, pause when scrolled away
   useEffect(() => {
     if (item.type !== "video" || reducedMotion) return;
     const video = videoRef.current;
@@ -216,8 +326,8 @@ function CarouselItem({
         <>
           <video
             ref={videoRef}
-            src={item.src}
-            poster={item.poster}
+            src={item.srcMp4}
+            poster={item.posterWebp}
             muted
             loop
             playsInline
@@ -231,21 +341,18 @@ function CarouselItem({
           </div>
         </>
       ) : (
-        <>
-          {!imgError ? (
-            <img
-              src={item.src}
-              alt={item.alt}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <FallbackPlaceholder alt={item.alt} />
-          )}
-        </>
+        <picture>
+          {item.srcAvif && <source srcSet={item.srcAvif} type="image/avif" />}
+          <img
+            src={item.srcWebp}
+            alt={item.alt}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover"
+          />
+        </picture>
       )}
+      <Watermark />
     </button>
   );
 }
@@ -261,7 +368,6 @@ function DesktopCard({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLButtonElement>(null);
-  const [imgError, setImgError] = useState(false);
   const reducedMotion = useReducedMotion();
 
   const aspectClass =
@@ -271,7 +377,6 @@ function DesktopCard({
         ? "aspect-[16/10]"
         : "aspect-square";
 
-  // Pause video when out of viewport (desktop)
   useEffect(() => {
     if (item.type !== "video" || reducedMotion) return;
     const video = videoRef.current;
@@ -301,8 +406,8 @@ function DesktopCard({
         <>
           <video
             ref={videoRef}
-            src={item.src}
-            poster={item.poster}
+            src={item.srcMp4}
+            poster={item.posterWebp}
             muted
             loop
             playsInline
@@ -326,36 +431,20 @@ function DesktopCard({
         </>
       ) : (
         <>
-          {!imgError ? (
+          <picture>
+            {item.srcAvif && <source srcSet={item.srcAvif} type="image/avif" />}
             <img
-              src={item.src}
+              src={item.srcWebp}
               alt={item.alt}
               loading="lazy"
               decoding="async"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onError={() => setImgError(true)}
             />
-          ) : (
-            <FallbackPlaceholder alt={item.alt} />
-          )}
+          </picture>
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
         </>
       )}
+      <Watermark />
     </button>
-  );
-}
-
-/* ── Shared fallback ─────────────────────────────── */
-
-function FallbackPlaceholder({ alt }: { alt: string }) {
-  return (
-    <div className="w-full h-full flex items-center justify-center text-neutral-400 dark:text-neutral-600">
-      <div className="text-center">
-        <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-neutral-300 dark:bg-neutral-700 flex items-center justify-center">
-          <span className="text-lg font-oswald font-bold">GI</span>
-        </div>
-        <p className="text-xs">{alt}</p>
-      </div>
-    </div>
   );
 }

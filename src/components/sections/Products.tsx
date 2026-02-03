@@ -3,6 +3,7 @@ import { products, getWhatsAppUrl } from "../../data/siteData";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { Watermark } from "../ui/Watermark";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useEffect, useRef, useState } from "react";
 
@@ -65,29 +66,20 @@ function ProductCard({
         transition: `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`,
       }}
     >
-      {/* Image */}
+      {/* Image with AVIF→WebP fallback + watermark */}
       <div className="relative aspect-[4/3] bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.title}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          onError={(e) => {
-            // Placeholder on error
-            const el = e.target as HTMLImageElement;
-            el.style.display = "none";
-          }}
-        />
-        {/* Placeholder when no image */}
-        <div className="absolute inset-0 flex items-center justify-center text-neutral-400 dark:text-neutral-500">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
-              <span className="text-2xl font-oswald font-bold">GI</span>
-            </div>
-            <p className="text-xs">{product.title}</p>
-          </div>
-        </div>
+        <picture>
+          <source srcSet={product.imageAvif} type="image/avif" />
+          <img
+            src={product.imageWebp}
+            alt={product.alt}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </picture>
+
+        <Watermark />
 
         {product.badge && (
           <div className="absolute top-3 right-3">
