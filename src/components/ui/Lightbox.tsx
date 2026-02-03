@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef } from "react";
 import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import type { GalleryItem } from "../../data/siteData";
 import { Watermark } from "./Watermark";
+import { LightboxVideoPlayer } from "../media/LightboxVideoPlayer";
 
 interface LightboxProps {
   items: GalleryItem[];
@@ -30,11 +31,19 @@ export function Lightbox({
   /* ── Keyboard navigation ──────────────────────── */
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev();
-      if (e.key === "ArrowRight") onNext();
+      if (e.key === "Escape") {
+        // When fullscreen is active let the browser exit it first
+        if (document.fullscreenElement) return;
+        onClose();
+      }
+      // Arrow keys navigate items only for images; the video player handles seek
+      const isVideo = items[currentIndex]?.type === "video";
+      if (!isVideo) {
+        if (e.key === "ArrowLeft") onPrev();
+        if (e.key === "ArrowRight") onNext();
+      }
     },
-    [onClose, onPrev, onNext]
+    [onClose, onPrev, onNext, items, currentIndex]
   );
 
   useEffect(() => {
@@ -127,16 +136,12 @@ export function Lightbox({
           onClick={(e) => e.stopPropagation()}
         >
           {item.type === "video" ? (
-            <video
+            <LightboxVideoPlayer
               key={item.id}
-              src={item.srcMp4}
+              src={item.srcMp4 ?? ""}
               poster={item.posterWebp}
-              controls
-              playsInline
-              className="max-w-[90vw] max-h-[70vh] md:max-h-[72vh] rounded-lg"
-            >
-              Tu navegador no soporta video.
-            </video>
+              title={item.alt}
+            />
           ) : (
             <picture>
               {item.srcAvif && <source srcSet={item.srcAvif} type="image/avif" />}

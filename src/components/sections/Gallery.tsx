@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Play, ChevronLeft, ChevronRight, Images } from "lucide-react";
 import { galleryItems, GALLERY_FEATURED_COUNT } from "../../data/siteData";
 import type { GalleryItem } from "../../data/siteData";
@@ -291,49 +291,23 @@ function CarouselItem({
   item: GalleryItem;
   onClick: () => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const itemRef = useRef<HTMLButtonElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (item.type !== "video" || reducedMotion) return;
-    const video = videoRef.current;
-    const el = itemRef.current;
-    if (!video || !el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [item.type, reducedMotion]);
-
   return (
     <button
-      ref={itemRef}
       onClick={onClick}
       className="snap-center shrink-0 w-[80vw] aspect-[4/3] rounded-xl overflow-hidden relative bg-neutral-200 dark:bg-neutral-800 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#61A75E] focus-visible:ring-offset-2"
       aria-label={`Ver ${item.alt}`}
     >
       {item.type === "video" ? (
         <>
-          <video
-            ref={videoRef}
-            src={item.srcMp4}
-            poster={item.posterWebp}
-            muted
-            loop
-            playsInline
-            preload="none"
-            className="w-full h-full object-cover"
-          />
+          {/* Poster only — no inline playback in preview */}
+          {item.posterWebp ? (
+            <picture>
+              {item.posterAvif && <source srcSet={item.posterAvif} type="image/avif" />}
+              <img src={item.posterWebp} alt={item.alt} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+            </picture>
+          ) : (
+            <div className="w-full h-full bg-neutral-300 dark:bg-neutral-700" />
+          )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white/90 text-[#15401A] shadow-lg">
               <Play size={20} fill="currentColor" />
@@ -366,10 +340,6 @@ function DesktopCard({
   item: GalleryItem;
   onClick: () => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const cardRef = useRef<HTMLButtonElement>(null);
-  const reducedMotion = useReducedMotion();
-
   const aspectClass =
     item.aspect === "tall"
       ? "aspect-[3/4]"
@@ -377,52 +347,23 @@ function DesktopCard({
         ? "aspect-[16/10]"
         : "aspect-square";
 
-  useEffect(() => {
-    if (item.type !== "video" || reducedMotion) return;
-    const video = videoRef.current;
-    const el = cardRef.current;
-    if (!video || !el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          video.pause();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [item.type, reducedMotion]);
-
   return (
     <button
-      ref={cardRef}
       onClick={onClick}
       className={`relative w-full ${aspectClass} rounded-xl overflow-hidden group cursor-pointer break-inside-avoid bg-neutral-200 dark:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#61A75E] focus-visible:ring-offset-2`}
       aria-label={`Ver ${item.alt}`}
     >
       {item.type === "video" ? (
         <>
-          <video
-            ref={videoRef}
-            src={item.srcMp4}
-            poster={item.posterWebp}
-            muted
-            loop
-            playsInline
-            preload="none"
-            className="w-full h-full object-cover"
-            onMouseEnter={() => {
-              if (!reducedMotion) videoRef.current?.play();
-            }}
-            onMouseLeave={() => {
-              if (videoRef.current) {
-                videoRef.current.pause();
-                videoRef.current.currentTime = 0;
-              }
-            }}
-          />
+          {/* Poster only — no inline playback in preview */}
+          {item.posterWebp ? (
+            <picture>
+              {item.posterAvif && <source srcSet={item.posterAvif} type="image/avif" />}
+              <img src={item.posterWebp} alt={item.alt} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+            </picture>
+          ) : (
+            <div className="w-full h-full bg-neutral-300 dark:bg-neutral-700" />
+          )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
             <div className="w-14 h-14 flex items-center justify-center rounded-full bg-white/90 text-[#15401A] shadow-lg group-hover:scale-110 transition-transform">
               <Play size={24} fill="currentColor" />
