@@ -13,21 +13,21 @@
 // ─── Contacto y WhatsApp ───────────────────────────────────
 export const contact = {
   /** Número con código de país, sin + ni espacios */
-  whatsappNumber: "57XXXXXXXXXX",
+  whatsappNumber: "573167417150",
   /** Mensaje predeterminado al abrir WhatsApp */
   whatsappDefaultMessage:
     "Hola Gonzalez Industrial, quiero cotizar un servicio.",
   /** Correo electrónico de contacto */
-  email: "contacto@gonzalezindustrial.com",
+  email: "tallergonzalez1949@gmail.com",
   /** Teléfono visible (formato libre) */
-  phone: "+57 XXX XXX XXXX",
+  phone: "+57 316 7417150",
   /** Dirección física */
-  address: "Zona Industrial, Bogotá, Colombia",
+  address: "Taller Industrial Gonzalez, Bucaramanga, Colombia",
   /** Google Maps embed URL (reemplazar con la real) */
   mapsEmbedUrl:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.0!2d-74.08!3d4.65!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMzknMDAuMCJOIDc0wrAwNCc0OC4wIlc!5e0!3m2!1ses!2sco!4v1700000000000",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.9730524156303!2d-73.1289877!3d7.1291136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e68157bd535c89b%3A0x4f86dc836aef6450!2sTaller%20Industrial%20Gonzalez!5e0!3m2!1ses-419!2sco!4v1769978431995!5m2!1ses-419!2sco",
   /** Horario de atención */
-  schedule: "Lunes a Viernes: 7:00 AM – 5:00 PM | Sábados: 8:00 AM – 12:00 M",
+  schedule: "Lunes a Viernes: 7:30 AM – 6:15 PM | Sábados: 7:30 AM – 1:00 PM",
 };
 
 /** Genera link de WhatsApp con mensaje personalizado */
@@ -51,12 +51,12 @@ export const navLinks = [
 
 // ─── Hero ──────────────────────────────────────────────────
 export const hero = {
-  title: "Maquila y soluciones industriales a medida",
+  title: "Maquila y soluciones metalmecánicas a medida",
   subtitle:
-    "Fabricación, mantenimiento y procesos metalmecánicos con calidad y cumplimiento.",
+    "Fabricación, mantenimiento y mecanizado industrial con precisión, calidad y cumplimiento.",
   /** Versión corta del subtítulo para viewports de poca altura */
   subtitleCompact:
-    "Fabricación y procesos metalmecánicos con calidad y cumplimiento.",
+    "Mecanizado industrial con precisión, calidad y cumplimiento.",
   ctaPrimary: "Cotizar ahora",
   ctaSecondary: "Ver servicios",
   chips: ["Respuesta rápida", "Calidad garantizada", "Entrega a tiempo"],
@@ -78,37 +78,37 @@ export const services: Service[] = [
     icon: "Factory",
     title: "Maquila Industrial",
     description:
-      "Producción en serie y por lote con procesos estandarizados para optimizar costos y tiempos.",
+      "Producción de piezas y componentes a medida según requerimientos del cliente.",
   },
   {
     icon: "CircleDot",
-    title: "Tornería CNC",
+    title: "Tornería Convencional",
     description:
-      "Mecanizado de precisión en torno convencional y CNC para piezas con tolerancias estrictas.",
+      "Servicio de torno para ejes, bujes, roscas, piñones y piezas cilíndricas.",
   },
   {
     icon: "Flame",
-    title: "Soldadura Especializada",
+    title: "Soldadura General",
     description:
-      "Soldadura MIG, TIG y electrodo en acero, inoxidable y aluminio con certificación de calidad.",
+      "Soldadura eléctrica y MIG para estructuras, refuerzos y reparación de piezas.",
   },
   {
     icon: "Scissors",
-    title: "Corte y Conformado",
+    title: "Taladro y Mecanizado",
     description:
-      "Corte por plasma, oxicorte y cizalla para láminas y perfiles de distintos espesores.",
+      "Perforado, ranurado y ajustes mecánicos en diferentes materiales.",
   },
   {
     icon: "Wrench",
-    title: "Mantenimiento Industrial",
+    title: "Fresadora",
     description:
-      "Mantenimiento preventivo y correctivo de maquinaria, equipos y estructuras metálicas.",
+      "Mecanizado de superficies, chaveteros y geometrías especiales.",
   },
   {
     icon: "Cog",
-    title: "Fabricación de Piezas",
+    title: "Mantenimiento Industrial y Agrícola",
     description:
-      "Diseño y fabricación de componentes a medida según planos o muestras del cliente.",
+      "Reparación y mantenimiento de maquinaria industrial y agrícola.",
   },
 ];
 
@@ -123,51 +123,52 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    image: "/media/products/piezas-mecanizadas.jpg",
+    image: "/media/products/piezas-mecanizadas.avif",
     title: "Piezas Mecanizadas",
-    category: "Componentes",
+    category: "Mecanizado",
     badge: "Personalizable",
     whatsappMessage:
-      "Hola, quiero cotizar piezas mecanizadas a medida.",
+      "Hola, quiero cotizar piezas mecanizadas: ejes, bujes, tornillos especiales, casquillos y componentes a medida.",
   },
   {
-    image: "/media/products/estructuras-metalicas.jpg",
-    title: "Estructuras Metálicas",
-    category: "Estructuras",
+    image: "/media/products/estructuras-metalicas.avif",
+    title: "Piñones y Coronas",
+    category: "Transmisión",
     badge: "Personalizable",
     whatsappMessage:
-      "Hola, necesito cotización para estructuras metálicas.",
+      "Hola, necesito cotización para fabricación o reparación de piñones, coronas y engranajes industriales.",
   },
   {
-    image: "/media/products/componentes-industriales.jpg",
-    title: "Componentes Industriales",
-    category: "Componentes",
+    image: "/media/products/componentes-industriales.avif",
+    title: "Poleas Industriales",
+    category: "Transmisión",
     badge: "Personalizable",
     whatsappMessage:
-      "Hola, quiero cotizar componentes industriales.",
+      "Hola, quiero cotizar poleas para transmisión y maquinaria industrial.",
   },
   {
-    image: "/media/products/ejes-y-bujes.jpg",
-    title: "Ejes y Bujes",
-    category: "Piezas de precisión",
-    badge: "Personalizable",
-    whatsappMessage: "Hola, necesito cotización para ejes y bujes.",
-  },
-  {
-    image: "/media/products/soportes-bases.jpg",
-    title: "Soportes y Bases",
-    category: "Estructuras",
+    image: "/media/products/ejes-y-bujes.avif",
+    title: "Cadenas Industriales",
+    category: "Transmisión",
     badge: "Personalizable",
     whatsappMessage:
-      "Hola, quiero cotizar soportes y bases metálicas.",
+      "Hola, necesito cotización para fabricación, reparación o ensamble de cadenas industriales.",
   },
   {
-    image: "/media/products/prototipos.jpg",
-    title: "Prototipos y Series Cortas",
+    image: "/media/products/soportes-bases.avif",
+    title: "Componentes Especiales",
+    category: "Fabricación a medida",
+    badge: "Personalizable",
+    whatsappMessage:
+      "Hola, quiero cotizar piezas únicas fabricadas según muestra o requerimiento específico.",
+  },
+  {
+    image: "/media/products/prototipos.avif",
+    title: "Prototipos y Piezas a Medida",
     category: "Desarrollo",
     badge: "A medida",
     whatsappMessage:
-      "Hola, me interesa desarrollar un prototipo o serie corta.",
+      "Hola, me interesa desarrollar piezas únicas o series cortas según necesidad.",
   },
 ];
 
@@ -271,38 +272,38 @@ export const galleryItems: GalleryItem[] = [
 export const about = {
   title: "Sobre Gonzalez Industrial",
   description:
-    "Somos un taller metalmecánico con amplia experiencia en fabricación, mantenimiento y maquila industrial. Trabajamos con compromiso, calidad y cumplimiento para ofrecer soluciones reales a la industria colombiana.",
+    "Somos un taller metalmecánico con experiencia en mecanizado, soldadura y mantenimiento industrial y agrícola. Trabajamos piezas a medida con compromiso, calidad y cumplimiento.",
   highlights: [
     {
       icon: "Award",
-      title: "Experiencia comprobada",
+      title: "Experiencia en Taller",
       description:
-        "Años de trayectoria resolviendo retos industriales con profesionalismo.",
+        "Años de trabajo en torno, fresadora y maquinaria convencional.",
     },
     {
       icon: "ShieldCheck",
-      title: "Calidad rigurosa",
+      title: "Calidad en Cada Pieza",
       description:
-        "Control de calidad en cada etapa del proceso productivo.",
+        "Cuidado en medidas, acabados y funcionamiento de cada trabajo.",
     },
     {
       icon: "Cpu",
-      title: "Maquinaria adecuada",
+      title: "Maquinaria Convencional",
       description:
-        "Equipos convencionales y CNC para diversos tipos de trabajo.",
+        "Torno, fresadora, taladro y prensa hidráulica.",
     },
     {
       icon: "Headset",
-      title: "Soporte constante",
+      title: "Atención Directa",
       description:
-        "Acompañamiento técnico y atención personalizada de principio a fin.",
+        "Trato directo con el cliente y trabajo según necesidad real.",
     },
   ],
-  /** Certificaciones/sellos (placeholder — reemplazar con reales) */
+  /** Certificaciones/sellos */
   certifications: [
-    "Seguridad Industrial",
-    "Control de Calidad",
-    "Buenas Prácticas de Manufactura",
+    "Seguridad industrial",
+    "Control dimensional",
+    "Buenas prácticas de taller",
   ],
 };
 
@@ -318,8 +319,7 @@ export const ctaBanner = {
 export const footer = {
   copyright: `© ${new Date().getFullYear()} Gonzalez Industrial. Todos los derechos reservados.`,
   socialLinks: [
-    // Descomentar y completar si aplica:
-    // { platform: "facebook", url: "https://facebook.com/..." },
-    // { platform: "instagram", url: "https://instagram.com/..." },
+    { platform: "instagram", url: "https://www.instagram.com/tallerindustrialgonzalez1949/" },
+    { platform: "facebook", url: "https://www.facebook.com/tallerindustrial.gonzalez" },
   ] as { platform: string; url: string }[],
 };

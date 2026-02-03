@@ -4,26 +4,309 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Política de Privacidad — Gonzalez Industrial</title>
+  <meta name="description" content="Política de Privacidad y Tratamiento de Datos Personales de Gonzalez Industrial." />
+  <meta name="robots" content="noindex, follow" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
+
+  <!-- Prevent dark mode flash -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (
+        stored === "dark" ||
+        (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; color: #333; line-height: 1.7; }
-    h1 { font-size: 1.5rem; border-bottom: 2px solid #61A75E; padding-bottom: 0.5rem; }
-    a { color: #15401A; }
+    :root {
+      --color-primary: #15401A;
+      --color-primary-light: #61A75E;
+      --color-dark: #1A1A1A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      color: #374151;
+      background: #fff;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .dark body {
+      background: var(--color-dark);
+      color: #d1d5db;
+    }
+
+    .container {
+      max-width: 768px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    @media (min-width: 640px) {
+      .container { padding: 3rem 1.5rem 5rem; }
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-primary);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--color-primary-light); }
+    .dark .back-link { color: var(--color-primary-light); }
+    .dark .back-link:hover { color: #8cc989; }
+
+    /* Title */
+    h1 {
+      font-family: "Oswald", sans-serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      border-bottom: 3px solid var(--color-primary-light);
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .dark h1 { color: #fff; }
+
+    @media (min-width: 640px) {
+      h1 { font-size: 2rem; }
+    }
+
+    .updated {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 2.5rem;
+    }
+    .dark .updated { color: #9ca3af; }
+
+    /* Section headings */
+    h2 {
+      font-family: "Oswald", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .dark h2 { color: #fff; }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-dark);
+      margin-top: 1.25rem;
+      margin-bottom: 0.35rem;
+    }
+    .dark h3 { color: #e5e7eb; }
+
+    p {
+      margin-bottom: 0.85rem;
+      font-size: 0.938rem;
+    }
+
+    ul, ol {
+      margin-bottom: 0.85rem;
+      padding-left: 1.5rem;
+      font-size: 0.938rem;
+    }
+    li { margin-bottom: 0.35rem; }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.2s;
+    }
+    a:hover { color: var(--color-primary-light); }
+    .dark a { color: var(--color-primary-light); }
+    .dark a:hover { color: #8cc989; }
+
+    strong { color: var(--color-dark); }
+    .dark strong { color: #f3f4f6; }
+
+    /* Divider */
+    hr {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 2.5rem 0;
+    }
+    .dark hr { border-color: #374151; }
+
+    /* Footer note */
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.813rem;
+      color: #6b7280;
+      text-align: center;
+    }
+    .dark .footer-note { border-color: #374151; color: #9ca3af; }
   </style>
 </head>
 <body>
-  <h1>Política de Privacidad</h1>
-  <p><strong>Gonzalez Industrial</strong></p>
-  <p>Última actualización: Enero 2026</p>
+  <div class="container">
 
-  <h2>Datos que recopilamos</h2>
-  <p>Recopilamos únicamente los datos que usted nos proporciona a través de nuestro formulario de contacto: nombre, empresa, teléfono y mensaje. Estos datos se utilizan exclusivamente para responder su solicitud.</p>
+    <a href="/" class="back-link">&larr; Volver al inicio</a>
 
-  <h2>Uso de la información</h2>
-  <p>La información proporcionada se usa para comunicarnos con usted respecto a cotizaciones y servicios solicitados. No compartimos sus datos con terceros.</p>
+    <h1>Política de Privacidad y Tratamiento de Datos Personales</h1>
+    <p class="updated">Última actualización: 1 de febrero de 2026</p>
 
-  <h2>Contacto</h2>
-  <p>Para consultas sobre esta política, escríbanos a: <a href="mailto:contacto@gonzalezindustrial.com">contacto@gonzalezindustrial.com</a></p>
+    <!-- 1. Identificación del responsable -->
+    <h2>1. Identificación del responsable</h2>
+    <p>
+      <strong>Responsable del tratamiento:</strong> Gonzalez Industrial<br />
+      <strong>Ubicación:</strong> Bucaramanga, Santander, Colombia<br />
+      <strong>Teléfono / WhatsApp:</strong> <a href="https://wa.me/573167417150">+57 316 7417150</a><br />
+      <strong>Correo electrónico:</strong> <a href="mailto:tallergonzalez1949@gmail.com">tallergonzalez1949@gmail.com</a>
+    </p>
+    <p>
+      Gonzalez Industrial, en cumplimiento de la Ley 1581 de 2012 y el Decreto 1377 de 2013, es responsable del
+      tratamiento de los datos personales recopilados a través de este sitio web y sus canales de contacto.
+    </p>
 
-  <p><a href="/">← Volver al inicio</a></p>
+    <!-- 2. Datos personales que recopilamos -->
+    <h2>2. Datos personales que recopilamos</h2>
+    <p>Recopilamos los siguientes datos personales cuando usted nos contacta:</p>
+    <ul>
+      <li><strong>Datos de contacto:</strong> nombre, número de teléfono, correo electrónico y empresa (si aplica).</li>
+      <li><strong>Información del servicio solicitado:</strong> mensaje, descripción del requerimiento y especificaciones técnicas proporcionadas.</li>
+      <li><strong>Datos técnicos mínimos:</strong> dirección IP, tipo de navegador y registros de acceso (logs), recopilados de forma automática para la operación y seguridad del sitio.</li>
+    </ul>
+
+    <!-- 3. Finalidades del tratamiento -->
+    <h2>3. Finalidades del tratamiento</h2>
+    <p>Los datos personales recopilados se utilizan para las siguientes finalidades:</p>
+    <ul>
+      <li>Atender solicitudes de cotización, contacto y servicio.</li>
+      <li>Gestión operativa: agendamiento, coordinación y seguimiento de trabajos.</li>
+      <li>Soporte y atención al cliente.</li>
+      <li>Cumplimiento de obligaciones legales y contables cuando aplique.</li>
+      <li>Seguridad del sitio web y prevención de uso indebido.</li>
+    </ul>
+
+    <!-- 4. Base legal / Autorización -->
+    <h2>4. Base legal y autorización</h2>
+    <p>
+      El tratamiento de sus datos personales se realiza con base en su <strong>autorización previa, expresa e informada</strong>,
+      otorgada al momento de enviar el formulario de contacto de este sitio web o al comunicarse con nosotros
+      a través de WhatsApp, correo electrónico u otros canales habilitados.
+    </p>
+    <p>
+      Usted puede <strong>revocar su autorización</strong> y/o solicitar la <strong>supresión</strong> de sus datos personales
+      en cualquier momento, cuando lo considere procedente, a través de los canales de contacto indicados en esta política.
+    </p>
+
+    <!-- 5. Derechos del titular -->
+    <h2>5. Derechos del titular y cómo ejercerlos</h2>
+    <p>De acuerdo con la Ley 1581 de 2012, como titular de datos personales usted tiene derecho a:</p>
+    <ul>
+      <li>Conocer, actualizar y rectificar sus datos personales.</li>
+      <li>Solicitar prueba de la autorización otorgada.</li>
+      <li>Ser informado sobre el uso que se ha dado a sus datos.</li>
+      <li>Revocar la autorización y/o solicitar la supresión de sus datos, cuando proceda.</li>
+      <li>Acceder de forma gratuita a sus datos personales.</li>
+      <li>Presentar quejas ante la Superintendencia de Industria y Comercio (SIC) por infracciones a la ley.</li>
+    </ul>
+
+    <h3>¿Cómo ejercer sus derechos?</h3>
+    <p>Puede comunicarse con nosotros a través de los siguientes canales:</p>
+    <ul>
+      <li><strong>WhatsApp:</strong> <a href="https://wa.me/573167417150">+57 316 7417150</a></li>
+      <li><strong>Correo electrónico:</strong> <a href="mailto:tallergonzalez1949@gmail.com">tallergonzalez1949@gmail.com</a></li>
+    </ul>
+    <p>El procedimiento para atender su solicitud es el siguiente:</p>
+    <ol>
+      <li><strong>Identificación:</strong> indique su nombre completo y datos de contacto para verificar su identidad como titular.</li>
+      <li><strong>Descripción de la solicitud:</strong> describa claramente el derecho que desea ejercer (consulta, rectificación, supresión, revocación, etc.).</li>
+      <li><strong>Respuesta:</strong> daremos respuesta a su solicitud por el mismo canal en un plazo máximo de quince (15) días hábiles, contados a partir de la recepción de la solicitud.</li>
+    </ol>
+
+    <!-- 6. Encargados / Terceros -->
+    <h2>6. Encargados y terceros</h2>
+    <p>
+      Para la prestación de nuestros servicios y la operación de este sitio web, podemos utilizar proveedores tecnológicos
+      (servicios de hosting, formularios web, plataformas de mensajería) que actúan como <strong>encargados del tratamiento</strong>.
+    </p>
+    <p>
+      Estos proveedores acceden a los datos personales únicamente en la medida necesaria para prestar el servicio contratado
+      y están sujetos a obligaciones de confidencialidad y seguridad. No compartimos sus datos con terceros para fines
+      comerciales o de marketing.
+    </p>
+
+    <!-- 7. Transferencias internacionales -->
+    <h2>7. Transferencias internacionales de datos</h2>
+    <p>
+      Algunos proveedores tecnológicos utilizados para la operación del sitio web (como servicios de hosting o mensajería)
+      pueden estar ubicados fuera de Colombia. En estos casos, la transferencia de datos se realiza bajo medidas razonables
+      de seguridad y conforme a lo establecido en la legislación colombiana aplicable.
+    </p>
+
+    <!-- 8. Seguridad de la información -->
+    <h2>8. Seguridad de la información</h2>
+    <p>
+      Gonzalez Industrial adopta medidas razonables de carácter técnico y organizativo para proteger los datos personales
+      contra acceso no autorizado, pérdida, alteración o divulgación indebida. El acceso a los datos está restringido
+      únicamente al personal autorizado que necesite conocerlos para la atención de su solicitud.
+    </p>
+
+    <!-- 9. Cookies -->
+    <h2>9. Cookies</h2>
+    <p>
+      Este sitio web utiliza únicamente <strong>cookies esenciales</strong> necesarias para su correcto funcionamiento,
+      como el almacenamiento de la preferencia de tema visual (modo claro/oscuro). Estas cookies no recopilan información
+      personal ni se utilizan con fines de seguimiento o publicidad.
+    </p>
+    <p>
+      No utilizamos cookies de análisis, marketing ni de terceros. Usted puede gestionar o eliminar las cookies
+      en cualquier momento desde la configuración de su navegador.
+    </p>
+
+    <!-- 10. Vigencia y cambios -->
+    <h2>10. Vigencia y cambios</h2>
+    <p>
+      Esta política de privacidad entra en vigencia a partir del <strong>1 de febrero de 2026</strong> y permanecerá
+      vigente mientras Gonzalez Industrial realice tratamiento de datos personales.
+    </p>
+    <p>
+      Cualquier modificación a esta política será publicada en esta misma página con la fecha de actualización correspondiente.
+      Le recomendamos revisarla periódicamente.
+    </p>
+
+    <hr />
+
+    <p class="footer-note">
+      &copy; 2026 Gonzalez Industrial. Todos los derechos reservados.<br />
+      <a href="/">Volver al inicio</a>
+    </p>
+
+  </div>
 </body>
 </html>

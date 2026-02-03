@@ -1,5 +1,11 @@
+import { Instagram, Facebook } from "lucide-react";
 import { navLinks, contact, footer } from "../../data/siteData";
 import { Logo } from "../ui/Logo";
+
+const socialIcons: Record<string, typeof Instagram> = {
+  instagram: Instagram,
+  facebook: Facebook,
+};
 
 export function Footer() {
   return (
@@ -64,17 +70,21 @@ export function Footer() {
             </ul>
             {footer.socialLinks.length > 0 && (
               <div className="flex gap-3 mt-4">
-                {footer.socialLinks.map((social) => (
-                  <a
-                    key={social.platform}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-[#61A75E] transition-colors capitalize text-sm"
-                  >
-                    {social.platform}
-                  </a>
-                ))}
+                {footer.socialLinks.map((social) => {
+                  const Icon = socialIcons[social.platform];
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.platform}
+                      className="text-neutral-500 hover:text-[#61A75E] transition-colors"
+                    >
+                      {Icon ? <Icon size={20} /> : social.platform}
+                    </a>
+                  );
+                })}
               </div>
             )}
           </div>
