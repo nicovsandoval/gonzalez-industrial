@@ -24,6 +24,7 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
+    background: #0b0f0c;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -36,6 +37,7 @@
     font-family: var(--font-body);
     color: #1A1A1A;
     background-color: #ffffff;
+    overscroll-behavior-y: none;
   }
 
   .dark body {
@@ -106,6 +108,16 @@ html.dark::-webkit-scrollbar-thumb:hover {
  *    compact for iPhone SE (568), landscape phones.
  */
 
+/* iOS Safari fullscreen: modern viewport units with progressive fallback */
+.hero-section {
+  min-height: 100vh;
+  min-height: 100svh;
+  height: 100dvh;
+  /* Safe-area for viewport-fit=cover on notch/home-indicator devices */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Compact subtitle hidden by default */
 .hero-subtitle-compact {
   display: none;
@@ -136,6 +148,7 @@ html.dark::-webkit-scrollbar-thumb:hover {
   .hero-section {
     min-height: 100vh;
     min-height: 100svh;
+    height: 100dvh;
   }
 
   .hero-content {
@@ -251,6 +264,18 @@ html.dark::-webkit-scrollbar-thumb:hover {
     width: 1.25rem;
     height: 1.25rem;
   }
+}
+
+/* ── Mobile drawer: iOS Safari full-viewport coverage ── */
+.mobile-drawer-backdrop {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.mobile-drawer-panel {
+  height: 100vh;
+  height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* ── Utility classes ───────────────────────────── */

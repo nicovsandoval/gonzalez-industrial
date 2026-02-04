@@ -29,13 +29,31 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open + notify parent
+  // Lock body scroll when mobile menu is open + notify parent.
+  // iOS Safari needs position:fixed on body to truly prevent background scroll.
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    onMobileMenuChange?.(mobileOpen);
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (mobileOpen) {
+      const scrollY = window.scrollY;
+      Object.assign(document.body.style, {
+        position: "fixed",
+        top: `-${scrollY}px`,
+        left: "0",
+        right: "0",
+        overflow: "hidden",
+      });
+      onMobileMenuChange?.(true);
+      return () => {
+        Object.assign(document.body.style, {
+          position: "",
+          top: "",
+          left: "",
+          right: "",
+          overflow: "",
+        });
+        window.scrollTo(0, scrollY);
+      };
+    }
+    onMobileMenuChange?.(false);
   }, [mobileOpen, onMobileMenuChange]);
 
   // Close drawer on ESC key
@@ -170,14 +188,14 @@ export function Header({
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+            className="mobile-drawer-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer panel */}
           <nav
-            className="fixed top-0 right-0 h-full w-[280px] max-w-[85vw] bg-white dark:bg-[#1A1A1A] z-[60] shadow-2xl flex flex-col lg:hidden"
+            className="mobile-drawer-panel fixed top-0 right-0 w-[280px] max-w-[85vw] bg-white dark:bg-[#1A1A1A] z-[60] shadow-2xl flex flex-col lg:hidden"
             aria-label="Menú móvil"
           >
             {/* Drawer header */}
