@@ -108,14 +108,18 @@ html.dark::-webkit-scrollbar-thumb:hover {
  *    compact for iPhone SE (568), landscape phones.
  */
 
-/* iOS Safari fullscreen: modern viewport units with progressive fallback */
+/*
+ * 100svh = small viewport height — stable on iOS.
+ * Unlike 100dvh it does NOT resize when browser bars animate
+ * (Chrome iOS bottom bar, Safari floating bar), preventing ugly
+ * hero height jumps during scroll.
+ * No padding here so the background image/video goes full-bleed
+ * behind the notch / home-indicator; content spacing is handled
+ * by .hero-content padding (already ≥ 5 rem, well above insets).
+ */
 .hero-section {
   min-height: 100vh;
   min-height: 100svh;
-  height: 100dvh;
-  /* Safe-area for viewport-fit=cover on notch/home-indicator devices */
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Compact subtitle hidden by default */
@@ -126,8 +130,9 @@ html.dark::-webkit-scrollbar-thumb:hover {
 /* ── A) Desktop: fluid vertical spacing ──────── */
 @media (min-width: 769px) {
   .hero-content {
-    padding-top: clamp(5rem, 13vh, 8rem);
-    padding-bottom: clamp(4rem, 11vh, 8rem);
+    /* max() ensures content never goes under the notch / home indicator */
+    padding-top: max(clamp(5rem, 13vh, 8rem), env(safe-area-inset-top, 0px));
+    padding-bottom: max(clamp(4rem, 11vh, 8rem), env(safe-area-inset-bottom, 0px));
   }
 
   .hero-chips {
@@ -148,12 +153,11 @@ html.dark::-webkit-scrollbar-thumb:hover {
   .hero-section {
     min-height: 100vh;
     min-height: 100svh;
-    height: 100dvh;
   }
 
   .hero-content {
-    padding-top: 6.5rem;
-    padding-bottom: 5rem;
+    padding-top: max(6.5rem, env(safe-area-inset-top, 0px));
+    padding-bottom: max(5rem, env(safe-area-inset-bottom, 0px));
   }
 
   .hero-title {
@@ -205,8 +209,8 @@ html.dark::-webkit-scrollbar-thumb:hover {
 /* ── C) Mobile compact fuerte (≤ 768 × ≤ 650) ── */
 @media (max-width: 768px) and (max-height: 650px) {
   .hero-content {
-    padding-top: 5rem;
-    padding-bottom: 2.5rem;
+    padding-top: max(5rem, env(safe-area-inset-top, 0px));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
   }
 
   .hero-title {
@@ -267,14 +271,15 @@ html.dark::-webkit-scrollbar-thumb:hover {
 }
 
 /* ── Mobile drawer: iOS Safari full-viewport coverage ── */
+/* 100svh is stable (doesn't shift with browser-bar animation). */
 .mobile-drawer-backdrop {
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 
 .mobile-drawer-panel {
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 

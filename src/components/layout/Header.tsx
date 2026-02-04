@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { navLinks, getWhatsAppUrl } from "../../data/siteData";
 import { ThemeToggle } from "../ui/ThemeToggle";
@@ -29,42 +29,64 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open + notify parent.
-  // iOS Safari needs position:fixed on body to truly prevent background scroll.
+  // ── Scroll lock (iOS-safe, no jump) ─────────────────────────
+  // Lock/unlock is imperative (not inside useEffect) so body style
+  // removal and scrollTo happen in the same synchronous call —
+  // no paint cycle in between that would flash scroll-position 0.
+  const scrollLockY = useRef(0);
+
+  const openMenu = useCallback(() => {
+    scrollLockY.current = window.scrollY;
+    Object.assign(document.body.style, {
+      position: "fixed",
+      top: `-${scrollLockY.current}px`,
+      left: "0",
+      right: "0",
+      width: "100%",
+    });
+    setMobileOpen(true);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    const y = scrollLockY.current;
+    Object.assign(document.body.style, {
+      position: "",
+      top: "",
+      left: "",
+      right: "",
+      width: "",
+    });
+    // behavior:'auto' bypasses CSS scroll-behavior:smooth → no visible jump
+    window.scrollTo({ top: y, left: 0, behavior: "auto" });
+    setMobileOpen(false);
+  }, []);
+
+  // Notify parent; safety cleanup if component unmounts while menu is open
   useEffect(() => {
+    onMobileMenuChange?.(mobileOpen);
     if (mobileOpen) {
-      const scrollY = window.scrollY;
-      Object.assign(document.body.style, {
-        position: "fixed",
-        top: `-${scrollY}px`,
-        left: "0",
-        right: "0",
-        overflow: "hidden",
-      });
-      onMobileMenuChange?.(true);
       return () => {
         Object.assign(document.body.style, {
           position: "",
           top: "",
           left: "",
           right: "",
-          overflow: "",
+          width: "",
         });
-        window.scrollTo(0, scrollY);
+        window.scrollTo({ top: scrollLockY.current, left: 0, behavior: "auto" });
       };
     }
-    onMobileMenuChange?.(false);
   }, [mobileOpen, onMobileMenuChange]);
 
   // Close drawer on ESC key
   useEffect(() => {
     if (!mobileOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") closeMenu();
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, [mobileOpen]);
+  }, [mobileOpen, closeMenu]);
 
   const isTransparent = !scrolled;
 
@@ -171,7 +193,7 @@ export function Header({
                 transparent={isTransparent}
               />
               <button
-                onClick={() => setMobileOpen(!mobileOpen)}
+                onClick={() => (mobileOpen ? closeMenu() : openMenu())}
                 aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
                 aria-expanded={mobileOpen}
                 className={`p-2 rounded-lg transition-colors ${iconColorClass}`}
@@ -189,7 +211,7 @@ export function Header({
           {/* Backdrop */}
           <div
             className="mobile-drawer-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
-            onClick={() => setMobileOpen(false)}
+            onClick={closeMenu}
             aria-hidden="true"
           />
 
@@ -211,7 +233,7 @@ export function Header({
                 </span>
               </div>
               <button
-                onClick={() => setMobileOpen(false)}
+                onClick={closeMenu}
                 aria-label="Cerrar menú"
                 className="p-2 -mr-2 text-[#1A1A1A] dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
               >
@@ -228,7 +250,7 @@ export function Header({
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={closeMenu}
                     className={`flex items-center min-h-[44px] px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                       isActive
                         ? "text-[#15401A] dark:text-[#61A75E] bg-[#15401A]/10 dark:bg-[#61A75E]/10"
