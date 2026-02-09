@@ -283,6 +283,48 @@ html.dark::-webkit-scrollbar-thumb:hover {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}
+
+/* iOS visual continuity at top/bottom browser UI */
+.hero-section {
+  background: #0b0b0b;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .hero-section::before,
+  .hero-section::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-section::before {
+    top: 0;
+    height: calc(48px + env(safe-area-inset-top, 0px));
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0));
+  }
+
+  .hero-section::after {
+    bottom: 0;
+    height: calc(72px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0));
+  }
+
+  .hero-scroll-indicator {
+    z-index: 10;
+  }
+}
+
 /* ── Utility classes ───────────────────────────── */
 @layer utilities {
   .font-oswald {

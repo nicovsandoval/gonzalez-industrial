@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, type MouseEvent } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { navLinks, getWhatsAppUrl } from "../../data/siteData";
 import { ThemeToggle } from "../ui/ThemeToggle";
@@ -29,54 +29,96 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── Scroll lock (iOS-safe, no jump) ─────────────────────────
-  // Lock/unlock is imperative (not inside useEffect) so body style
-  // removal and scrollTo happen in the same synchronous call —
-  // no paint cycle in between that would flash scroll-position 0.
   const scrollLockY = useRef(0);
+  const previousInlineScrollBehavior = useRef("");
 
-  const openMenu = useCallback(() => {
+  const openMenu = useCallback((event?: MouseEvent<HTMLElement>) => {
+    event?.preventDefault();
+    event?.stopPropagation();
     scrollLockY.current = window.scrollY;
+    document.documentElement.classList.add("menu-open");
     Object.assign(document.body.style, {
       position: "fixed",
       top: `-${scrollLockY.current}px`,
       left: "0",
       right: "0",
       width: "100%",
+      overflow: "hidden",
     });
     setMobileOpen(true);
   }, []);
 
-  const closeMenu = useCallback(() => {
-    const y = scrollLockY.current;
+  const closeMenu = useCallback((event?: MouseEvent<HTMLElement>) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    const savedY = scrollLockY.current;
+    const root = document.documentElement;
+    const activeElement = document.activeElement;
+
+    // iOS pinta un frame en top al quitar body fixed; usamos RAF + blur para evitar flash y scrollIntoView.
+    if (activeElement instanceof HTMLElement) activeElement.blur();
+
+    previousInlineScrollBehavior.current = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove("menu-open");
+      Object.assign(document.body.style, {
+        position: "",
+        top: "",
+        left: "",
+        right: "",
+        width: "",
+        overflow: "",
+      });
+
+      window.scrollTo(0, savedY);
+      requestAnimationFrame(() => {
+        window.scrollTo(0, savedY);
+        requestAnimationFrame(() => {
+          root.style.scrollBehavior = previousInlineScrollBehavior.current;
+        });
+      });
+    });
+
+    setMobileOpen(false);
+  }, []);
+
+  const closeMenuForNavigation = useCallback(() => {
+    document.documentElement.classList.remove("menu-open");
     Object.assign(document.body.style, {
       position: "",
       top: "",
       left: "",
       right: "",
       width: "",
+      overflow: "",
     });
-    // behavior:'auto' bypasses CSS scroll-behavior:smooth → no visible jump
-    window.scrollTo({ top: y, left: 0, behavior: "auto" });
     setMobileOpen(false);
   }, []);
 
-  // Notify parent; safety cleanup if component unmounts while menu is open
+  // Notify parent about menu state
   useEffect(() => {
     onMobileMenuChange?.(mobileOpen);
-    if (mobileOpen) {
-      return () => {
-        Object.assign(document.body.style, {
-          position: "",
-          top: "",
-          left: "",
-          right: "",
-          width: "",
-        });
-        window.scrollTo({ top: scrollLockY.current, left: 0, behavior: "auto" });
-      };
-    }
   }, [mobileOpen, onMobileMenuChange]);
+
+  // Safety cleanup if component unmounts while the menu is open
+  useEffect(() => {
+    return () => {
+      document.documentElement.classList.remove("menu-open");
+      Object.assign(document.body.style, {
+        position: "",
+        top: "",
+        left: "",
+        right: "",
+        width: "",
+        overflow: "",
+      });
+      document.documentElement.style.scrollBehavior = previousInlineScrollBehavior.current;
+      window.scrollTo(0, scrollLockY.current);
+    };
+  }, []);
 
   // Close drawer on ESC key
   useEffect(() => {
@@ -193,7 +235,8 @@ export function Header({
                 transparent={isTransparent}
               />
               <button
-                onClick={() => (mobileOpen ? closeMenu() : openMenu())}
+                type="button"
+                onClick={(event) => (mobileOpen ? closeMenu(event) : openMenu(event))}
                 aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
                 aria-expanded={mobileOpen}
                 className={`p-2 rounded-lg transition-colors ${iconColorClass}`}
@@ -209,10 +252,11 @@ export function Header({
       {mobileOpen && (
         <>
           {/* Backdrop */}
-          <div
-            className="mobile-drawer-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+          <button
+            type="button"
+            className="mobile-drawer-backdrop fixed inset-0 m-0 border-0 p-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
             onClick={closeMenu}
-            aria-hidden="true"
+            aria-label="Cerrar menú"
           />
 
           {/* Drawer panel */}
@@ -233,6 +277,7 @@ export function Header({
                 </span>
               </div>
               <button
+                type="button"
                 onClick={closeMenu}
                 aria-label="Cerrar menú"
                 className="p-2 -mr-2 text-[#1A1A1A] dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
@@ -250,7 +295,7 @@ export function Header({
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={closeMenu}
+                    onClick={closeMenuForNavigation}
                     className={`flex items-center min-h-[44px] px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                       isActive
                         ? "text-[#15401A] dark:text-[#61A75E] bg-[#15401A]/10 dark:bg-[#61A75E]/10"
